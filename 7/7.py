@@ -13,9 +13,7 @@ class intcode:
         elif mode == 1:
             return content[index]
 
-    def calc_input(self, noun, verb, phase, in_signal):
-        # input[1] = noun
-        # input[2] = verb
+    def calc_input(self, phase, in_signal):
         while self.i < len(self.content):
             op_code = self.content[self.i]
             if op_code > 100: 
@@ -39,17 +37,14 @@ class intcode:
                 in2 = self.get_param(self.i+2, p2m)
                 save = self.content[self.i+3]
                 self.content[save] = in1 + in2
-                #print(f"Saving {in1 + in2} to {save}")
                 self.i = self.i + 4
             elif (op_code == 2):
                 in1 = self.get_param(self.i+1, p1m)
                 in2 = self.get_param(self.i+2, p2m)
                 save = self.content[self.i+3]
                 self.content[save] = in1 * in2
-                #print(f"Saving {in1 * in2} to {save}")
                 self.i = self.i + 4
             elif (op_code == 3):
-                # print("input")
                 if self.input_count == 0:
                     num = phase
                     print("phase")
@@ -61,7 +56,6 @@ class intcode:
                 self.content[save] = num
                 self.i += 2
             elif (op_code == 4):
-                # print('Output:')
                 output = self.get_param(self.i+1, p1m)
                 self.i += 2
                 return(output)
@@ -98,11 +92,8 @@ def run_amplifiers(first, phase):
     comps = [intcode(content) for _ in range(5)]
     while not halt:
         try:
-            outs.append(comps[0].calc_input(0,0,phase[0],outs[-1]))
-            outs.append(comps[1].calc_input(0,0,phase[1],outs[-1]))
-            outs.append(comps[2].calc_input(0,0,phase[2],outs[-1]))
-            outs.append(comps[3].calc_input(0,0,phase[3],outs[-1]))
-            outs.append(comps[4].calc_input(0,0,phase[4],outs[-1]))
+            for i in range(0,len(comps)):
+                outs.append(comps[i].calc_input(phase[i],outs[-1]))
         except StopIteration:
             halt = True
             return outs[-1]
