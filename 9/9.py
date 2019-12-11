@@ -1,4 +1,6 @@
 from itertools import permutations
+import time
+
 
 class intcode:
     def __init__(self, content):
@@ -21,6 +23,7 @@ class intcode:
             return content[index]
         elif mode == 2:
             return content[content[index] + self.r_base]
+    
 
     def calc_input(self, phase, in_signal):
         while self.i < len(self.content):
@@ -131,8 +134,14 @@ content.extend([0] * 1000000)
 
 print('Part 1: ')
 comp = intcode(content)
+start = time.time()
 comp.calc_input(1,1)
+end = time.time()
+print(f'Calc time: {end - start}')
 
 print('Part 2: ')
 comp = intcode(content)
+start = time.time()
 comp.calc_input(2,1)
+end = time.time()
+print(f'Calc time: {end - start}')
